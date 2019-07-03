@@ -1,6 +1,6 @@
 import React from 'react'
 import getUser from '../../services/UsersService'
-import { get } from 'https';
+// import { get } from 'https';
 
 function UserProfile() {
   
@@ -12,7 +12,7 @@ function UserProfile() {
   getData()
   
     return (
-      <div>p</div>
+      <div>USER PROFILE</div>
     )
   
 

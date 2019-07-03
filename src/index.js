@@ -9,14 +9,14 @@ import App from "./App";
 import { BrowserRouter as Router } from "react-router-dom";
 import * as serviceWorker from "./serviceWorker";
 import { AuthStore } from "./contexts/AuthStore";
-import { UserContextProvider } from "./contexts/UserContext"
+// import { UserContextProvider } from "./contexts/UserContext"
 
 ReactDOM.render(
   <Router>
     <AuthStore>
-      <UserContextProvider>
+      {/* <UserContextProvider> */}
         <App />
-      </UserContextProvider>
+      {/* </UserContextProvider> */}
     </AuthStore>
   </Router>,
   document.getElementById("root"));

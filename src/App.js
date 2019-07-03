@@ -1,31 +1,36 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
+import { Switch, Route } from 'react-router-dom';
+// import logo from './logo.svg';
 import './App.css';
+
 import Home from './components/misc/Home';
-import UserContext from './contexts/UserContext';
+import Register from './components/Auth/Register';
+import Login from './components/Auth/Login';
+// import Profile from './components/Auth/Profile';
+// import Navbar from './components/misc/Navbar';
 import UserProfile from './components/Users/UserProfile';
 
-function App() {
-  return (
-    <div className="App">
-      <div>HEADER
-        <div>MENU Header || Register, Login</div>
-        <div>MENU inferior Header || Home, Looking for an User?</div>
-      </div>
-      <div>BODY
-        <div>switch 
-          <div>Home</div>
-          <Home></Home>
-          <UserProfile></UserProfile>
-          <div>is authenticate = to register</div>
-          <div>is authenticate & is complete = to profile</div>
-        
+// import UserContext from './contexts/UserContext';
+
+import PrivateRoute from './guards/PrivateRoute';
+
+class App extends Component {
+  render() {
+    return (
+      <div className="container-fluid">
+        <div className="row mt-5">
+          <div className="col-12">
+            <Switch>
+              <Route exact path="/" component={Home} />
+              <Route exact path="/register" component={Register} />
+              <Route exact path="/login" component={Login} />
+              {/* <PrivateRoute exact path="/profile" component={Profile} /> */}
+            </Switch>
+          </div>
         </div>
       </div>
-      <div>FOOTER</div>
-      
-    </div>
-  );
+    );
+  }
 }
 
 export default App;
