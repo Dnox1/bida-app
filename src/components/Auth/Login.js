@@ -3,7 +3,13 @@ import { Link, Redirect } from 'react-router-dom'
 import authService from '../../services/AuthService'
 import { withAuthConsumer } from '../../contexts/AuthStore';
 
-const EMAIL_PATTERN = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+/*eslint no-useless-escape: */
+
+const EMAIL_PATTERN = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i; 
+
+
+
+
 
 const validations = {
   email: (value) => {
