@@ -2,6 +2,12 @@ import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
 import { AuthContext } from '../../contexts/AuthStore';
 import AuthService from '../../services/AuthService';
+import blood from '../../data/blood.json';
+import medical from '../../data/medical.json';
+import food from '../../data/food.json';
+import ambiental from '../../data/ambiental.json';
+import animal from '../../data/animal.json';
+
 
 // eslint-disable-next-line
 const URL_PATTERN = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
@@ -118,6 +124,12 @@ const validations = {
     return message;
   },
 
+  aAContacts:(value) => {
+    let message;
+    if(!value) {
+      message = 'Add at least a Contact for advise';
+    }
+  }
 }
 
 export default class Register extends Component {
@@ -125,7 +137,7 @@ export default class Register extends Component {
     aAContact: {
       relationship: '',
       contactname: '',
-      telephone: ''
+      telephone: ['']
     },
     user: {
       email: '',
@@ -133,17 +145,17 @@ export default class Register extends Component {
       avatarURL: '',
       name: '',
       surName: '',
-      aAContacts: [],
+      aAContacts: [''],
       personalIdNumber: '',
       ssn: '',
-      blood: '',
-      medical: '',
-      food: '',
-      ambiental: '',
-      animal: '',
-      othersAllergy: '',
-      medsINeed: '',
-      diseases: '',
+      blood: blood[0],
+      medical: medical[0],
+      food: food[0],
+      ambiental: ambiental[0],
+      animal: animal[0],
+      othersAllergy: [''],
+      medsINeed: [''],
+      diseases: [''],
       securityCode: '',
     },
     errors: {},
@@ -156,6 +168,11 @@ export default class Register extends Component {
       .some(attr => this.state.errors[attr])
   }
   
+  // isArray = () => {
+  //   return Object.value(this.state.user)
+  //     .some(attr => this.state.user[attr])
+  // }
+
   handleSubmitAddAaContact =(e) => {
     e.preventDefault()
     console.log('in')
@@ -168,7 +185,13 @@ export default class Register extends Component {
             this.state.aAContact,
           ],
         }
-      }, () => console.log(this.state))
+      }, this.setState({
+        aAContact: {
+          relationship: '',
+          contactname: '',
+          telephone: ['']
+        },
+      }))
       console.log("aac" + this.state.aAContact)
       console.log("aacs" + this.state.aAContact)
     }
@@ -188,12 +211,21 @@ export default class Register extends Component {
     })
   }
 
+  hasaAContact = () => {
+    let contacts
+    if (this.user.aAContacts) {
+      console.log("contact" + this.user.aAContacts)
+    }
+  }
+
   handleChange = (e) => {
     const { name, value } = e.target;
     this.setState({
       user: {
         ...this.state.user,
         [name]: value
+        
+        // añadir aqui un condicional para que mande los datos dentro de un array en las opciones en las que ha de serlo 
       },
       errors: {
         ...this.state.errors,
@@ -212,9 +244,37 @@ export default class Register extends Component {
     })
   }
 
-  handleSubmit = (e) => {
-    e.preventDefault();
-    if (this.isValid());
+  // formatUser = () => {
+  //   const {user, email, password, avatarURL, name, surName, aAContacts, personalIdNumber, ssn, blood, medical, food,  ambiental,
+  //     animal, othersAllergy, medsINeed, diseases, securityCode} = this.state;
+
+  //   return {...user, 
+  //     personalData: {
+  //       name,
+  //       surName,
+  //       aAContacts,
+  //       personalIdNumber,
+  //       ssn,
+  //     },
+  //     medicalData: {
+  //       blood,
+  //       allergies: {
+  //         medical,
+  //         food,
+  //         ambiental,
+  //         animal,
+  //         othersAllergy
+  //       },
+  //       medsINeed,
+  //       diseases
+  //     },
+  //     securityCode
+  //   }
+  // }
+
+  handleSubmit = (event) => {
+    event.preventDefault();
+    if (this.isValid()) {
       AuthService.register(this.state.user)
         .then(
           (user) => this.setState({ isRegistered: true }),
@@ -229,6 +289,7 @@ export default class Register extends Component {
             })
           }
         )
+    }
   }
 
   isValid = () => {
@@ -242,13 +303,20 @@ export default class Register extends Component {
       return (<Redirect to="/login"/>)
     }
 
+    const bloodOpts = blood.map(c => <option key={c}>{c}</option>)
+    const medicalOpts = medical.map(c => <option key={c}>{c}</option>)
+    const foodOpts = food.map(c => <option key={c}>{c}</option>)
+    const ambientalOpts = ambiental.map(c => <option key={c}>{c}</option>)
+    const animalOpts = animal.map(c => <option key={c}>{c}</option>)
+  
+
     return (
       <div className="box mx-auto">
         <div className="row">
           <div className="col-12">
             <h1>Sign up</h1>
 
-            <form id="register-form" className="mt-4" >
+            <form id="register-form" className="mt-4" onSubmit={this.handleSubmit} >
              
               <div className="shadow p-4 mb-5 bg-white rounded "><h3>Register Data</h3>
                 <div className="row">
@@ -322,6 +390,10 @@ export default class Register extends Component {
                     </div>
                   </div>
                 </div>
+                <div>{aAContact.relationship} {aAContact.contactname} {aAContact.telephone}</div>
+                <div className='invalid-feedback'>{ errors.aAContacts}</div>
+
+                
               </div>
 
 
@@ -330,11 +402,18 @@ export default class Register extends Component {
                 <p> </p>
                 <h4>General</h4>
                 <div className="row">
+
+                                 
                   <div className="form-group p-2 col-6">
                     <label>blood</label>
-                    <input type="text" name="blood" className={`form-control ${touch.blood && errors.blood ? 'is-invalid' : ''}`} onChange={this.handleChange} onBlur={this.handleBlur} value={user.blood} />
-                    <div className='invalid-feedback'>{ errors.blood}</div>
+                    <select className={`form-control ${touch.blood && errors.blood ? 'is-invalid' : ''}`} name="blood" onChange={this.handleChange} onBlur={this.handleBlur} value={user.blood}>
+                     {bloodOpts}
+                    </select>
+                    <div className='invalid-feedback'>{ errors.blood }</div>
                   </div>
+
+
+
                   <div className="form-group p-2 col-6">
                     <label>medsINeed</label>
                     <input type="text" name="medsINeed" className={`form-control ${touch.medsINeed && errors.medsINeed ? 'is-invalid' : ''}`} onChange={this.handleChange} onBlur={this.handleBlur} value={user.medsINeed} />
@@ -350,7 +429,9 @@ export default class Register extends Component {
                 <div className="row">
                   <div className="form-group p-2 col-6">
                     <label>medical</label>
-                    <input type="text" name="medical" className={`form-control ${touch.medical && errors.medical ? 'is-invalid' : ''}`} onChange={this.handleChange} onBlur={this.handleBlur} value={user.medical} />
+                    <select name="medical" className={`form-control ${touch.medical && errors.medical ? 'is-invalid' : ''}`} onChange={this.handleChange} onBlur={this.handleBlur} value={user.medical} >
+                      {medicalOpts} 
+                    </select>
                     <div className='invalid-feedback'>{ errors.medical}</div>
                   </div>
                   <div className="form-group p-2 col-6">
@@ -379,7 +460,7 @@ export default class Register extends Component {
               <div className="col-12 pt-4">
             <h5>Hello!</h5>
             <p className="mb-2"><small>If you signup, you agree with all our terms and conditions where we can do whatever we want with the data!</small></p>
-            {/* <button className="btn btn-success" form="register-form" type="submit" disabled={!this.isValid()}> Create the Account</button> */}
+            <button className="btn btn-success" form="register-form" type="submit" disabled={!this.isValid()}> Create the Account</button>
           </div>
             </form>
 
