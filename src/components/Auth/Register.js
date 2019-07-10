@@ -1,5 +1,8 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
+import { Row, Col, Tag } from 'antd';
+
+
 import { AuthContext } from '../../contexts/AuthStore';
 import AuthService from '../../services/AuthService';
 import blood from '../../data/blood.json';
@@ -19,7 +22,10 @@ const NIF_NIE_PATTERN = /^[0-9XYZ]{1}[0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/i;
 const SSNUMBER_PATTERN = /^[0-9]{12}$/;
 // eslint-disable-next-line
 const BIDA_URL_PATTERN = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
- 
+
+const { CheckableTag } = Tag;
+
+
 const validations = {
   email: (value)=> {
     let message;
@@ -149,7 +155,7 @@ export default class Register extends Component {
       personalIdNumber: '',
       ssn: '',
       blood: blood[0],
-      medical: medical[0],
+      medical: [],
       food: food[0],
       ambiental: ambiental[0],
       animal: animal[0],
@@ -160,8 +166,23 @@ export default class Register extends Component {
     },
     errors: {},
     touch: {},
-    isRegistered: false
+    isRegistered: false,
+    checked: true
   }
+
+  handleChecked = (checked, item, property) => {
+    if (checked) {
+      this.setState({ user: {
+        ...this.state.user,
+        [property]: [...this.state.user[property], item]
+      } })
+    } else {
+      this.setState({ user: {
+        ...this.state.user,
+        [property]: this.state.user[property].filter(x => x !== item)
+      }})
+    }
+  };
 
   isValidAaContacts = () => {
     return !Object.keys(this.state.aAContact)
@@ -304,10 +325,10 @@ export default class Register extends Component {
     }
 
     const bloodOpts = blood.map(c => <option key={c}>{c}</option>)
-    const medicalOpts = medical.map(c => <option key={c}>{c}</option>)
-    const foodOpts = food.map(c => <option key={c}>{c}</option>)
-    const ambientalOpts = ambiental.map(c => <option key={c}>{c}</option>)
-    const animalOpts = animal.map(c => <option key={c}>{c}</option>)
+    // const medicalOpts = medical.map(c => <option key={c}>{c}</option>)
+    // const foodOpts = food.map(c => <option key={c}>{c}</option>)
+    // const ambientalOpts = ambiental.map(c => <option key={c}>{c}</option>)
+    // const animalOpts = animal.map(c => <option key={c}>{c}</option>)
   
 
     return (
@@ -320,37 +341,39 @@ export default class Register extends Component {
              
               <div className="shadow p-4 mb-5 bg-white rounded "><h3>Register Data</h3>
                 <div className="row">
-                  <div className="form-group p-4 col-6">
-                    <label>Email</label>
-                    <input type="email" name="email" className={`form-control ${touch.email && errors.email ? 'is-invalid' : ''}`} onChange={this.handleChange} onBlur={this.handleBlur} value={user.email} />
-                    <div className='invalid-feedback'>{ errors.email}</div>
-                  </div>
-                  <div className="form-group p-4 col-6">
-                    <label>Password</label>
-                    <input type="password" name="password" className={`form-control ${touch.password && errors.password ? 'is-invalid' : ''}`} onChange={this.handleChange} onBlur={this.handleBlur} value={user.password} />
-                    <div className='invalid-feedback'>{ errors.password}</div>
+                  <div className="form-group p-4 col-12">
+                    <div className="p-4 col-12"> 
+                      <label>Email</label>
+                      <input type="email" name="email" className={`form-control ${touch.email && errors.email ? 'is-invalid' : ''}`} onChange={this.handleChange} onBlur={this.handleBlur} value={user.email} />
+                      <div className='invalid-feedback'>{ errors.email}</div>
+                    </div>
+                    <div className="p-4 col-12">
+                      <label>Password</label>
+                      <input type="password" name="password" className={`form-control ${touch.password && errors.password ? 'is-invalid' : ''}`} onChange={this.handleChange} onBlur={this.handleBlur} value={user.password} />
+                      <div className='invalid-feedback'>{ errors.password}</div>
+                    </div>
                   </div>
                 </div>
               </div>
 
               <div className="shadow p-4 mb-5 bg-white rounded "><h3>Personal Data</h3>
                 <div className="row">
-                  <div className="form-group p-4 col-6">
+                  <div className="form-group p-4 col-12">
                     <label>Name</label>
                     <input type="text" name="name" className={`form-control ${touch.name && errors.name ? 'is-invalid' : ''}`} onChange={this.handleChange} onBlur={this.handleBlur} value={user.name} />
                     <div className='invalid-feedback'>{ errors.name}</div>
                   </div>
-                  <div className="form-group p-4 col-6">
+                  <div className="form-group p-4 col-12">
                     <label>Sur Name</label>
                     <input type="text" name="surName" className={`form-control ${touch.surName && errors.surName ? 'is-invalid' : ''}`} onChange={this.handleChange} onBlur={this.handleBlur} value={user.surName} />
                     <div className='invalid-feedback'>{ errors.surName}</div>
                   </div>
-                  <div className="form-group p-4 col-6">
+                  <div className="form-group p-4 col-12">
                     <label>personalIdNumber</label>
                     <input type="text" name="personalIdNumber" className={`form-control ${touch.personalIdNumber && errors.personalIdNumber ? 'is-invalid' : ''}`} onChange={this.handleChange} onBlur={this.handleBlur} value={user.personalIdNumber} />
                     <div className='invalid-feedback'>{ errors.personalIdNumber}</div>
                   </div>
-                  <div className="form-group p-4 col-6">
+                  <div className="form-group p-4 col-12">
                     <label>ssn</label>
                     <input type="number" name="ssn" className={`form-control ${touch.ssn && errors.ssn ? 'is-invalid' : ''}`} onChange={this.handleChange} onBlur={this.handleBlur} value={user.ssn} />
                     <div className='invalid-feedback'>{ errors.ssn}</div>
@@ -369,24 +392,24 @@ export default class Register extends Component {
                 <div id="AaContact-form" className="mt-4" >
                   <div className="row">
 
-                    <div className="form-group p-2 col-3">
+                    <div className="form-group p-2 col-6">
                       <label>relationship</label>
                       <input type="text" name="relationship" className={`form-control ${touch.relationship && errors.relationship ? 'is-invalid' : ''}`} onChange={this.handleChangeAddAaContact} onBlur={this.handleBlur} value={aAContact.relationship} />
                       <div className='invalid-feedback'>{ errors.relationship}</div>
                     </div>
-                    <div className="form-group p-2 col-3">
+                    <div className="form-group p-2 col-6">
                       <label>contactname</label>
                       <input type="text" name="contactname" className={`form-control ${touch.contactname && errors.contactname ? 'is-invalid' : ''}`} onChange={this.handleChangeAddAaContact} onBlur={this.handleBlur} value={aAContact.contactname} />
                       <div className='invalid-feedback'>{ errors.contactname}</div>
                     </div>
-                    <div className="form-group p-2 col-3">
+                    <div className="form-group p-2 col-6">
                       <label>Telephone</label>
                       <input type="tel" name="telephone" className={`form-control ${touch.telephone && errors.telephone ? 'is-invalid' : ''}`} onChange={this.handleChangeAddAaContact} onBlur={this.handleBlur} value={aAContact.telephone} />
                       <div className='invalid-feedback'>{ errors.telephone}</div>
                     </div>
                     <div className="form-group p-2 col-3">
-                      <label>add</label>
-                      <button className="btn btn-success" form="AaContact-form"   onClick={(e) => this.handleSubmitAddAaContact(e)}> Add AaContact</button>
+                      <label> + </label>
+                      <button className="btn btn-success" form="AaContact-form"   onClick={(e) => this.handleSubmitAddAaContact(e)}> + </button>
                     </div>
                   </div>
                 </div>
@@ -401,40 +424,70 @@ export default class Register extends Component {
                 <h3>Medical data</h3>
                 <p> </p>
                 <h4>General</h4>
-                <div className="row">
-
-                                 
-                  <div className="form-group p-2 col-6">
+                <div className="row">                                 
+                  <div className="form-group p-2 col-12">
                     <label>blood</label>
                     <select className={`form-control ${touch.blood && errors.blood ? 'is-invalid' : ''}`} name="blood" onChange={this.handleChange} onBlur={this.handleBlur} value={user.blood}>
                      {bloodOpts}
                     </select>
                     <div className='invalid-feedback'>{ errors.blood }</div>
                   </div>
-
-
-
-                  <div className="form-group p-2 col-6">
+                  <div className="form-group p-2 col-12">
                     <label>medsINeed</label>
                     <input type="text" name="medsINeed" className={`form-control ${touch.medsINeed && errors.medsINeed ? 'is-invalid' : ''}`} onChange={this.handleChange} onBlur={this.handleBlur} value={user.medsINeed} />
                     <div className='invalid-feedback'>{ errors.medsINeed }</div>
                   </div>
-                  <div className="form-group p-2 col-6">
+                  <div className="form-group p-2 col-12">
                     <label>diseases</label>
                     <input type="text" name="diseases" className={`form-control ${touch.diseases && errors.diseases ? 'is-invalid' : ''}`} onChange={this.handleChange} onBlur={this.handleBlur} value={user.diseases} />
                     <div className='invalid-feedback'>{ errors.diseases }</div>
                   </div>                
                 </div>
+
                 <h4>Allergies</h4>
                 <div className="row">
-                  <div className="form-group p-2 col-6">
+                  <div className="form-group p-2 col-12">
                     <label>medical</label>
-                    <select name="medical" className={`form-control ${touch.medical && errors.medical ? 'is-invalid' : ''}`} onChange={this.handleChange} onBlur={this.handleBlur} value={user.medical} >
-                      {medicalOpts} 
-                    </select>
-                    <div className='invalid-feedback'>{ errors.medical}</div>
+                    <div>
+                      {medical.map((option, i) => (
+                        <CheckableTag key={option} checked={user.medical.includes(option)} onChange={checked => { this.handleChecked(checked, option, 'medical') }}>
+                          {option}
+                        </CheckableTag>
+                      ))}
+                    </div>
                   </div>
-                  <div className="form-group p-2 col-6">
+                  <div className="form-group p-2 col-12">
+                    <label>Food</label>
+                    <div>
+                      {food.map((option, i) => (
+                        <CheckableTag key={option} checked={user.food.includes(option)} onChange={checked => { this.handleChecked(checked, option, 'food') }}>
+                          {option}
+                        </CheckableTag>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="form-group p-2 col-12">
+                    <label>Ambiental</label>
+                    <div>
+                      {ambiental.map((option, i) => (
+                        <CheckableTag key={option} checked={user.ambiental.includes(option)} onChange={checked => { this.handleChecked(checked, option, 'ambiental') }}>
+                          {option}
+                        </CheckableTag>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="form-group p-2 col-12">
+                    <label>Animal</label>
+                    <div>
+                      {food.map((option, i) => (
+                        <CheckableTag key={option} checked={user.animal.includes(option)} onChange={checked => { this.handleChecked(checked, option, 'animal') }}>
+                          {option}
+                        </CheckableTag>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* <div className="form-group p-2 col-6">
                     <label>food</label>
                     <input type="text" name="food" className={`form-control ${touch.food && errors.food ? 'is-invalid' : ''}`} onChange={this.handleChange} onBlur={this.handleBlur} value={user.food} />
                     <div className='invalid-feedback'>{ errors.food}</div>
@@ -448,7 +501,7 @@ export default class Register extends Component {
                     <label>animal</label>
                     <input type="text" name="animal" className={`form-control ${touch.animal && errors.animal ? 'is-invalid' : ''}`} onChange={this.handleChange} onBlur={this.handleBlur} value={user.animal} />
                     <div className='invalid-feedback'>{ errors.animal}</div>
-                  </div>  
+                  </div>   */}
                   <div className="form-group p-2 col-12">
                     <label>othersAllergy</label>
                     <input type="text" name="othersAllergy" className={`form-control ${touch.othersAllergy && errors.othersAllergy ? 'is-invalid' : ''}`} onChange={this.handleChange} onBlur={this.handleBlur} value={user.othersAllergy} />

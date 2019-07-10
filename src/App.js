@@ -6,6 +6,8 @@ import './App.css';
 import Home from './components/misc/Home';
 import Register from './components/Auth/Register';
 import Login from './components/Auth/Login';
+import Demo from './components/misc/demo';
+
 // import Profile from './components/Auth/Profile';
 // import Navbar from './components/misc/Navbar';
 import UserProfile from './components/Users/UserProfile';
@@ -24,6 +26,8 @@ class App extends Component {
               <Route exact path="/" component={Home} />
               <Route exact path="/register" component={Register} />
               <Route exact path="/login" component={Login} />
+
+              <Route exact path="/demo" component={Demo} />
               {/* <PrivateRoute exact path="/profile" component={Profile} /> */}
             </Switch>
           </div>
