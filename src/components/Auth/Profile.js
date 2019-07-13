@@ -11,6 +11,7 @@ import food from '../../data/food.json';
 import ambiental from '../../data/ambiental.json';
 import animal from '../../data/animal.json';
 import { withAuthConsumer } from '../../contexts/AuthStore.js';
+import QRCode from 'qrcode';
 
 
 // eslint-disable-next-line
@@ -26,6 +27,7 @@ const PASSWORD_PATTERN = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/;
 
 const { CheckableTag } = Tag;
 const { Option } = Select;
+
 
 
 const validations = {
@@ -141,6 +143,8 @@ const validations = {
   }
 }
 
+
+
 class Profile extends Component {
   state ={
     aAContact: {
@@ -165,7 +169,8 @@ class Profile extends Component {
       othersAllergy: [],
       medsINeed: [],
       diseases: [],
-      // securityCode: '',
+      urlBidi:'',
+      securityCode: '',
     },
     errors: {},
     touch: {},
@@ -176,6 +181,21 @@ class Profile extends Component {
     inputValue: '',
   }
 
+  // FUNCTIONS FOR QR GENERATOR
+
+//  getQr = () => {
+//   const { profileUrl } = this.state.user;
+//   if (profileUrl) {
+//   QRCode.toDataURL(profileUrl)
+//     .then(url => {
+//       console.log(url)
+//     })
+//     .catch(err => {
+//       console.error(err)
+//     })
+//   }
+// }
+  
 // FUNCTIONS FOR ANT DESIGN
 
  
@@ -346,10 +366,23 @@ class Profile extends Component {
   componentDidMount() {
     AuthService.getProfile()
       .then(
-        (user) => this.setState({ user: {...this.state.user, ...user } }),
+        (user) => this.setState({ user: {
+          ...this.state.user, 
+          ...user,} }),
         (error) => console.log(error)
-      )
+      );
+      QRCode.toDataURL(`users/${this.state.user.id}/${this.state.user.securityCode}`)
+      .then(url => this.setState({ 
+        user: {
+        ...this.state.user, 
+        urlBidi: url } }))
+      .catch(err => console.error(err))
+
+    
+
+    // getQr(`users/${this.state.user.id}/${this.state.user.securityCode}`)
   }
+  
 
   render() {
     const { isRegistered, errors, user, touch, aAContact, tags, inputVisible, inputValue } = this.state;
@@ -363,7 +396,9 @@ class Profile extends Component {
           <div className="col-12">
             <div> <i className="fa fa-sign-out btn-logout" onClick={this.handleLogout}></i></div>
             <div><p><Link to={`users/${user.id}/${user.securityCode}`}>View yout Public Profile</Link></p> </div>
+            <div><p><Link to={user.urlBidi}>View yout Public Profile</Link></p> </div>
 
+            <div>{}</div>
           </div>
         </div>
         <div className="row">

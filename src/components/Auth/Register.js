@@ -164,6 +164,7 @@ export default class Register extends Component {
       othersAllergy: [],
       medsINeed: [],
       diseases: [],
+      profileUrl:'',
       // securityCode: '',
     },
     errors: {},
@@ -237,7 +238,7 @@ export default class Register extends Component {
     this.setState({
       user: {
         ...this.state.user,
-        othersAllergy: ['tags']
+        othersAllergy: [...tags]
       },
       tags,
       inputVisible: false,
