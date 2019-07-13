@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Link, Redirect } from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
 import { Tag, Input, Tooltip, Icon, Select } from 'antd';
 
 
@@ -124,13 +124,13 @@ const validations = {
     }
     return message;
   },
-  // securityCode:(value) => {
-  //   let message;
-  //   if(!value) {
-  //     message = 'URL is required';
-  //   }
-  //   return message;
-  // },
+  securityCode:(value) => {
+    let message;
+    if(!value) {
+      message = 'URL is required';
+    }
+    return message;
+  },
 
   aAContacts:(value) => {
     let message;
@@ -165,7 +165,7 @@ class Profile extends Component {
       othersAllergy: [],
       medsINeed: [],
       diseases: [],
-      // securityCode: '',
+      securityCode: '',
     },
     errors: {},
     touch: {},
@@ -234,16 +234,12 @@ class Profile extends Component {
     }
     console.log(tags);
     this.setState({
-      user: {
-        ...this.state.user,
-        othersAllergy: [...tags]
-      },
       tags,
       inputVisible: false,
       inputValue: '',
-
     });
   };
+
   saveInputRef = input => (this.input = input);
 
   //FUNCTIONS FOR AACONTACTS FORM
@@ -360,14 +356,8 @@ class Profile extends Component {
     return (
       <div className="box mx-auto">
         <div className="row">
-          <div className="col-12">
-            <div> <i className="fa fa-sign-out btn-logout" onClick={this.handleLogout}></i></div>
-            <div><p><Link to={`users/${user.id}/${user.securityCode}`}>View yout Public Profile</Link></p> </div>
+        <i className="fa fa-sign-out btn-logout" onClick={this.handleLogout}></i>
 
-          </div>
-        </div>
-        <div className="row">
-          
           <div className="col-12">
             <h1>Profile</h1>
 
@@ -585,7 +575,7 @@ class Profile extends Component {
           />
         )}
         {!inputVisible && (
-          <Tag onClick={this.showInput} value={user.othersAllergy} name="othersAllergy" style={{ background: '#fff', borderStyle: 'dashed' }}>
+          <Tag onClick={this.showInput} style={{ background: '#fff', borderStyle: 'dashed' }}>
             <Icon type="plus" /> Add Allergy
           </Tag>
         )}

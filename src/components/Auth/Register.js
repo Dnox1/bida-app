@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
-import { Row, Col, Tag } from 'antd';
+import { Tag, Input, Tooltip, Icon, Select } from 'antd';
 
 
-import { AuthContext } from '../../contexts/AuthStore';
+// import { AuthContext } from '../../contexts/AuthStore';
 import AuthService from '../../services/AuthService';
 import blood from '../../data/blood.json';
 import medical from '../../data/medical.json';
@@ -13,17 +13,18 @@ import animal from '../../data/animal.json';
 
 
 // eslint-disable-next-line
-const URL_PATTERN = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
+// const URL_PATTERN = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
 // eslint-disable-next-line
 const EMAIL_PATTERN = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 const PASSWORD_PATTERN = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/;
-const PHONE_PATTERN = /^[679]{1}[0-9]{8}$/;
-const NIF_NIE_PATTERN = /^[0-9XYZ]{1}[0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/i;
-const SSNUMBER_PATTERN = /^[0-9]{12}$/;
+// const PHONE_PATTERN = /^[679]{1}[0-9]{8}$/;
+// const NIF_NIE_PATTERN = /^[0-9XYZ]{1}[0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/i;
+// const SSNUMBER_PATTERN = /^[0-9]{12}$/;
 // eslint-disable-next-line
-const BIDA_URL_PATTERN = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
+// const BIDA_URL_PATTERN = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
 
 const { CheckableTag } = Tag;
+const { Option } = Select;
 
 
 const validations = {
@@ -122,19 +123,20 @@ const validations = {
     }
     return message;
   },
-  securityCode:(value) => {
-    let message;
-    if(!value) {
-      message = 'URL is required';
-    }
-    return message;
-  },
+  // securityCode:(value) => {
+  //   let message;
+  //   if(!value) {
+  //     message = 'URL is required';
+  //   }
+  //   return message;
+  // },
 
   aAContacts:(value) => {
     let message;
     if(!value) {
       message = 'Add at least a Contact for advise';
     }
+    return message;
   }
 }
 
@@ -151,23 +153,50 @@ export default class Register extends Component {
       avatarURL: '',
       name: '',
       surName: '',
-      aAContacts: [''],
+      aAContacts: [],
       personalIdNumber: '',
       ssn: '',
-      blood: blood[0],
+      blood: [],
       medical: [],
-      food: food[0],
-      ambiental: ambiental[0],
-      animal: animal[0],
-      othersAllergy: [''],
-      medsINeed: [''],
-      diseases: [''],
-      securityCode: '',
+      food: [],
+      ambiental: [],
+      animal: [],
+      othersAllergy: [],
+      medsINeed: [],
+      diseases: [],
+      // securityCode: '',
     },
     errors: {},
     touch: {},
     isRegistered: false,
-    checked: true
+    checked: true,
+    tags: [],
+    inputVisible: false,
+    inputValue: '',
+  }
+
+// FUNCTIONS FOR ANT DESIGN
+
+ 
+
+  handleChangeSelect = (value) => {
+    this.setState({
+      user: {
+        ...this.state.user,
+        blood: value
+        
+        // añadir aqui un condicional para que mande los datos dentro de un array en las opciones en las que ha de serlo 
+      },
+      
+      errors: {
+        ...this.state.errors,
+        [blood]: validations[blood] && validations[blood](value)
+      }
+    })
+    console.log(`selected ${value}`);
+    console.log(`state ${this.state.user.blood}`);
+
+
   }
 
   handleChecked = (checked, item, property) => {
@@ -184,6 +213,43 @@ export default class Register extends Component {
     }
   };
 
+  handleClose = removedTag => {
+    const tags = this.state.tags.filter(tag => tag !== removedTag);
+    console.log(tags);
+    this.setState({ tags });
+  };
+
+  showInput = () => {
+    this.setState({ inputVisible: true }, () => this.input.focus());
+  };
+
+  handleInputChange = e => {
+    this.setState({ inputValue: e.target.value });
+  };
+
+  handleInputConfirm = () => {
+    const { inputValue } = this.state;
+    let { tags } = this.state;
+    if (inputValue && tags.indexOf(inputValue) === -1) {
+      tags = [...tags, inputValue];
+    }
+    console.log(tags);
+    this.setState({
+      user: {
+        ...this.state.user,
+        othersAllergy: ['tags']
+      },
+      tags,
+      inputVisible: false,
+      inputValue: '',
+
+    });
+  };
+
+  saveInputRef = input => (this.input = input);
+
+  //FUNCTIONS FOR AACONTACTS FORM
+
   isValidAaContacts = () => {
     return !Object.keys(this.state.aAContact)
       .some(attr => this.state.errors[attr])
@@ -196,7 +262,6 @@ export default class Register extends Component {
 
   handleSubmitAddAaContact =(e) => {
     e.preventDefault()
-    console.log('in')
     if (this.isValidAaContacts()) {
       this.setState({
         user: {
@@ -206,15 +271,17 @@ export default class Register extends Component {
             this.state.aAContact,
           ],
         }
-      }, this.setState({
-        aAContact: {
-          relationship: '',
-          contactname: '',
-          telephone: ['']
-        },
-      }))
+      }, 
+      // this.setState({
+      //   aAContact: {
+      //     relationship: '',
+      //     contactname: '',
+      //     telephone: []
+      //   },
+      // })
+      )
       console.log("aac" + this.state.aAContact)
-      console.log("aacs" + this.state.aAContact)
+      console.log(this.state.user)
     }
   }
 
@@ -232,12 +299,8 @@ export default class Register extends Component {
     })
   }
 
-  hasaAContact = () => {
-    let contacts
-    if (this.user.aAContacts) {
-      console.log("contact" + this.user.aAContacts)
-    }
-  }
+
+  // FUNCTIONS FOR FORM
 
   handleChange = (e) => {
     const { name, value } = e.target;
@@ -296,6 +359,7 @@ export default class Register extends Component {
   handleSubmit = (event) => {
     event.preventDefault();
     if (this.isValid()) {
+      console.log(this.state.user);
       AuthService.register(this.state.user)
         .then(
           (user) => this.setState({ isRegistered: true }),
@@ -319,17 +383,10 @@ export default class Register extends Component {
   }
 
   render() {
-    const { isRegistered, errors, user, touch, aAContact } = this.state;
+    const { isRegistered, errors, user, touch, aAContact, tags, inputVisible, inputValue } = this.state;
     if (isRegistered) {
       return (<Redirect to="/login"/>)
     }
-
-    const bloodOpts = blood.map(c => <option key={c}>{c}</option>)
-    // const medicalOpts = medical.map(c => <option key={c}>{c}</option>)
-    // const foodOpts = food.map(c => <option key={c}>{c}</option>)
-    // const ambientalOpts = ambiental.map(c => <option key={c}>{c}</option>)
-    // const animalOpts = animal.map(c => <option key={c}>{c}</option>)
-  
 
     return (
       <div className="box mx-auto">
@@ -413,7 +470,8 @@ export default class Register extends Component {
                     </div>
                   </div>
                 </div>
-                <div>{aAContact.relationship} {aAContact.contactname} {aAContact.telephone}</div>
+                <div> { user.aAContacts && user.aAContacts.map((contact, i) => ( <p key= {i} > {contact.relationship} {contact.contactname} {contact.telephone} </p> ))} </div>
+
                 <div className='invalid-feedback'>{ errors.aAContacts}</div>
 
                 
@@ -427,9 +485,24 @@ export default class Register extends Component {
                 <div className="row">                                 
                   <div className="form-group p-2 col-12">
                     <label>blood</label>
-                    <select className={`form-control ${touch.blood && errors.blood ? 'is-invalid' : ''}`} name="blood" onChange={this.handleChange} onBlur={this.handleBlur} value={user.blood}>
+                    {/* <select className={`form-control ${touch.blood && errors.blood ? 'is-invalid' : ''}`} name="blood" onChange={this.handleChange} onBlur={this.handleBlur} value={user.blood}>
                      {bloodOpts}
-                    </select>
+                    </select> */}
+
+                      <div>
+                        <Select defaultValue={'Select your type of blood'} style={{ width: 240 }} onChange={this.handleChangeSelect}  name="blood" value={user.blood}>
+                          <Option value="A+">A+</Option>
+                          <Option value="A-">A-</Option>
+                          <Option value="B+">B+</Option>
+                          <Option value="B-">B-</Option>
+                          <Option value="AB+">AB+</Option>
+                          <Option value="AB-">AB-</Option>
+                          <Option value="0+">0+</Option>
+                          <Option value="0-">0-</Option>
+                        </Select>
+                        
+                      </div>
+
                     <div className='invalid-feedback'>{ errors.blood }</div>
                   </div>
                   <div className="form-group p-2 col-12">
@@ -450,7 +523,7 @@ export default class Register extends Component {
                     <label>medical</label>
                     <div>
                       {medical.map((option, i) => (
-                        <CheckableTag key={option} checked={user.medical.includes(option)} onChange={checked => { this.handleChecked(checked, option, 'medical') }}>
+                        <CheckableTag key={i} checked={user.medical.includes(option)} onChange={checked => { this.handleChecked(checked, option, 'medical') }}>
                           {option}
                         </CheckableTag>
                       ))}
@@ -460,7 +533,7 @@ export default class Register extends Component {
                     <label>Food</label>
                     <div>
                       {food.map((option, i) => (
-                        <CheckableTag key={option} checked={user.food.includes(option)} onChange={checked => { this.handleChecked(checked, option, 'food') }}>
+                        <CheckableTag key={i} checked={user.food.includes(option)} onChange={checked => { this.handleChecked(checked, option, 'food') }}>
                           {option}
                         </CheckableTag>
                       ))}
@@ -470,7 +543,7 @@ export default class Register extends Component {
                     <label>Ambiental</label>
                     <div>
                       {ambiental.map((option, i) => (
-                        <CheckableTag key={option} checked={user.ambiental.includes(option)} onChange={checked => { this.handleChecked(checked, option, 'ambiental') }}>
+                        <CheckableTag key={i} checked={user.ambiental.includes(option)} onChange={checked => { this.handleChecked(checked, option, 'ambiental') }}>
                           {option}
                         </CheckableTag>
                       ))}
@@ -479,8 +552,8 @@ export default class Register extends Component {
                   <div className="form-group p-2 col-12">
                     <label>Animal</label>
                     <div>
-                      {food.map((option, i) => (
-                        <CheckableTag key={option} checked={user.animal.includes(option)} onChange={checked => { this.handleChecked(checked, option, 'animal') }}>
+                      {animal.map((option, i) => (
+                        <CheckableTag key={i} checked={user.animal.includes(option)} onChange={checked => { this.handleChecked(checked, option, 'animal') }}>
                           {option}
                         </CheckableTag>
                       ))}
@@ -504,9 +577,47 @@ export default class Register extends Component {
                   </div>   */}
                   <div className="form-group p-2 col-12">
                     <label>othersAllergy</label>
-                    <input type="text" name="othersAllergy" className={`form-control ${touch.othersAllergy && errors.othersAllergy ? 'is-invalid' : ''}`} onChange={this.handleChange} onBlur={this.handleBlur} value={user.othersAllergy} />
+                    <div>
+        {tags.map((tag, index) => {
+          const isLongTag = tag.length > 20;
+          const tagElem = (
+            <Tag key={tag} closable={index !== 0} onClose={() => this.handleClose(tag)}>
+              {isLongTag ? `${tag.slice(0, 20)}...` : tag}
+            </Tag>
+          );
+          return isLongTag ? (
+            <Tooltip title={tag} key={tag}>
+              {tagElem}
+            </Tooltip>
+          ) : (
+            tagElem
+          );
+        })}
+        {inputVisible && (
+          <Input
+            ref={this.saveInputRef}
+            type="text"
+            size="small"
+            style={{ width: 78 }}
+            value={inputValue}
+            onChange={this.handleInputChange}
+            onBlur={this.handleInputConfirm}
+            onPressEnter={this.handleInputConfirm}
+          />
+        )}
+        {!inputVisible && (
+          <Tag onClick={this.showInput} value={user.othersAllergy} name="othersAllergy" style={{ background: '#fff', borderStyle: 'dashed' }}>
+            <Icon type="plus" /> Add Allergy
+          </Tag>
+        )}
+      </div>
+                    {/* <input type="text" name="othersAllergy" className={`form-control ${touch.othersAllergy && errors.othersAllergy ? 'is-invalid' : ''}`} onChange={this.handleChange} onBlur={this.handleBlur} value={user.othersAllergy} /> */}
                     <div className='invalid-feedback'>{ errors.othersAllergy}</div>
-                  </div>                
+                  </div>    
+
+
+                  
+
                 </div>
 
               </div>

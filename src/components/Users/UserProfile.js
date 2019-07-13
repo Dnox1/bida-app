@@ -1,20 +1,28 @@
-import React from 'react'
+import React, { Component} from 'react'
 import getUser from '../../services/UsersService'
+
 // import { get } from 'https';
 
-function UserProfile() {
+class UserProfile extends Component{
   
-  const getData = () => {
-  getUser() 
-    .then(user => console.log(user))
+  state = {
+    data: {},
   }
 
-  getData()
+   componentDidMount() {
+    getUser(this.props.match.params.id, this.props.match.params.securityCode) 
+    .then(data => this.setState({data}))
+  }
   
+  render() {
+    
     return (
-      <div>USER PROFILE</div>
+      <div>
+        <div>USER PROFILE</div>
+        <div>{this.state.data.name}</div>
+      </div>
     )
-  
+  }
 
 }
 export default UserProfile;
