@@ -47,7 +47,8 @@ componentDidMount() {
 
 render() {
   const { isRegistered, urlBidi,  name, avatarURL } = this.state;
-  const {isAuthenticated,}=this.props
+  const {isAuthenticated, user}=this.props
+  console.log(user)
   if (!isAuthenticated()) {
     return (
       <MDBContainer>

@@ -380,22 +380,40 @@ class Profile extends Component {
             `http://localhost:3000/users/${user.id}/${user.securityCode}`,
             function (error) {}
             )
-          // .then(url => this.setState({ 
-          //   user: {
-          //   ...this.state.user, 
-          //   urlBidi: url } }))
         },
       (error) => console.log(error)
       );
       console.log(this.state.user)
+  }
+
+  // componentDidMount() {
+  //   AuthService.getProfile() //llamar solo si está autenticado
+  //     .then(
+  //       (user) => {
+  //         this.setState({
+  //           user: this.props.user
+  //         }, ()=>console.log(this.state.user))
+          
+  //         QRCode.toCanvas(
+  //           document.getElementById('canvas'),
+  //           `http://localhost:3000/users/${user.id}/${user.securityCode}`,
+  //           function (error) {}
+  //           )
+  //         // .then(url => this.setState({ 
+  //         //   user: {
+  //         //   ...this.state.user, 
+  //         //   urlBidi: url } }))
+  //       },
+  //     (error) => console.log(error)
+  //     );
+  //     console.log(this.state.user)
      
-      // .catch(err => console.error(err))
+  //     // .catch(err => console.error(err))
 
     
 
-    // getQr(`users/${this.state.user.id}/${this.state.user.securityCode}`)
-  }
-  
+  //   // getQr(`users/${this.state.user.id}/${this.state.user.securityCode}`)
+  // }
 
   render() {
     const { isRegistered, errors, user, touch, aAContact, tags, inputVisible, inputValue } = this.state;
