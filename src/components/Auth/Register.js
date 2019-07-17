@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
 import { Tag, Input, Tooltip, Icon, Select } from 'antd';
+// import { MDBContainer, MDBRow, MDBCol, MDBInput, MDBBtn } from 'mdbreact';
 
 
 // import { AuthContext } from '../../contexts/AuthStore';
@@ -579,58 +580,53 @@ export default class Register extends Component {
                   <div className="form-group p-2 col-12">
                     <label>othersAllergy</label>
                     <div>
-        {tags.map((tag, index) => {
-          const isLongTag = tag.length > 20;
-          const tagElem = (
-            <Tag key={tag} closable={index !== 0} onClose={() => this.handleClose(tag)}>
-              {isLongTag ? `${tag.slice(0, 20)}...` : tag}
-            </Tag>
-          );
-          return isLongTag ? (
-            <Tooltip title={tag} key={tag}>
-              {tagElem}
-            </Tooltip>
-          ) : (
-            tagElem
-          );
-        })}
-        {inputVisible && (
-          <Input
-            ref={this.saveInputRef}
-            type="text"
-            size="small"
-            style={{ width: 78 }}
-            value={inputValue}
-            onChange={this.handleInputChange}
-            onBlur={this.handleInputConfirm}
-            onPressEnter={this.handleInputConfirm}
-          />
-        )}
-        {!inputVisible && (
-          <Tag onClick={this.showInput} value={user.othersAllergy} name="othersAllergy" style={{ background: '#fff', borderStyle: 'dashed' }}>
-            <Icon type="plus" /> Add Allergy
-          </Tag>
-        )}
-      </div>
+                      {tags.map((tag, index) => {
+                        const isLongTag = tag.length > 20;
+                        const tagElem = (
+                          <Tag key={tag} closable={index !== 0} onClose={() => this.handleClose(tag)}>
+                            {isLongTag ? `${tag.slice(0, 20)}...` : tag}
+                          </Tag>
+                        );
+                        return isLongTag ? (
+                          <Tooltip title={tag} key={tag}>
+                            {tagElem}
+                          </Tooltip>
+                        ) : (
+                          tagElem
+                        );
+                      })}
+                      {inputVisible && (
+                        <Input
+                          ref={this.saveInputRef}
+                          type="text"
+                          size="small"
+                          style={{ width: 78 }}
+                          value={inputValue}
+                          onChange={this.handleInputChange}
+                          onBlur={this.handleInputConfirm}
+                          onPressEnter={this.handleInputConfirm}
+                        />
+                      )}
+                      {!inputVisible && (
+                        <Tag onClick={this.showInput} value={user.othersAllergy} name="othersAllergy" style={{ background: '#fff', borderStyle: 'dashed' }}>
+                          <Icon type="plus" /> Add Allergy
+                        </Tag>
+                      )}
+                    </div>
                     {/* <input type="text" name="othersAllergy" className={`form-control ${touch.othersAllergy && errors.othersAllergy ? 'is-invalid' : ''}`} onChange={this.handleChange} onBlur={this.handleBlur} value={user.othersAllergy} /> */}
                     <div className='invalid-feedback'>{ errors.othersAllergy}</div>
                   </div>    
-
-
-                  
-
                 </div>
-
               </div>
               <div className="col-12 pt-4">
-            <h5>Hello!</h5>
-            <p className="mb-2"><small>If you signup, you agree with all our terms and conditions where we can do whatever we want with the data!</small></p>
-            <button className="btn btn-success" form="register-form" type="submit" disabled={!this.isValid()}> Create the Account</button>
-          </div>
+                <h5>Hello!</h5>
+                <p className="mb-2"><small>If you signup, you agree with all our terms and conditions where we can do whatever we want with the data!</small></p>
+                <button className="btn btn-success" form="register-form" type="submit" disabled={!this.isValid()}> Create the Account</button>
+                <p className="mb-2"><small>If you signup, you agree with all our terms and conditions where we can do whatever we want with the data!</small></p>
+
+              </div>
             </form>
-
           </div>
-
         </div>
       </div>
     )

@@ -9,9 +9,12 @@ import PrivateRoute from './guards/PrivateRoute';
 
 import Home from './components/misc/Home';
 import Demo from './components/misc/demo';
+// import FormPage from './components/Auth/Loginmdb';
 
-// import Navbar from './components/misc/Navbar';
+
+import Navbar from './components/misc/Navbar';
 import UserProfile from './components/Users/UserProfile';
+import FooterPage from './components/misc/Footer';
 
 // import UserContext from './contexts/UserContext';
 
@@ -19,20 +22,22 @@ import UserProfile from './components/Users/UserProfile';
 class App extends Component {
   render() {
     return (
-      <div className="container-fluid">
-        <div className="row mt-5">
-          <div className="col-12">
-            <Switch>
-              <Route exact path="/" component={Home} />
-              <Route exact path="/register" component={Register} />
-              <Route exact path="/login" component={Login} />
-              <Route exact path="/users/:id/:securityCode" component={UserProfile} />
-              <PrivateRoute exact path="/profile" component={Profile} />
-              <Route exact path="/demo" component={Demo} />
-
-            </Switch>
+      <div className="App container-fluid">
+        <Navbar />
+          <div className="row">
+            <div className="col-12">
+              <Switch>
+                <Route exact path="/" component={Home} />
+                <Route exact path="/register" component={Register} />
+                <Route exact path="/login" component={Login} />
+                <Route exact path="/users/:id/:securityCode" component={UserProfile} />
+                <PrivateRoute exact path="/profile" component={Profile} />
+                <Route exact path="/demo" component={Demo} />
+                {/* <Route exact path="/formPage" component={FormPage} /> */}
+              </Switch>
+            </div>
           </div>
-        </div>
+        <FooterPage></FooterPage>
       </div>
     );
   }

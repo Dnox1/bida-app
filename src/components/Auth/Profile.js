@@ -3,7 +3,7 @@ import { Link, Redirect } from 'react-router-dom'
 import { Tag, Input, Tooltip, Icon, Select } from 'antd';
 
 
-// import { AuthContext } from '../../contexts/AuthStore';
+import { AuthContext } from '../../contexts/AuthStore';
 import AuthService from '../../services/AuthService';
 import blood from '../../data/blood.json';
 import medical from '../../data/medical.json';
@@ -13,6 +13,7 @@ import animal from '../../data/animal.json';
 import { withAuthConsumer } from '../../contexts/AuthStore.js';
 import QRCode from 'qrcode';
 
+var canvas = document.getElementById('canvas')
 
 // eslint-disable-next-line
 // const URL_PATTERN = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
@@ -366,17 +367,29 @@ class Profile extends Component {
   componentDidMount() {
     AuthService.getProfile()
       .then(
-        (user) => this.setState({ user: {
-          ...this.state.user, 
-          ...user,} }),
-        (error) => console.log(error)
+        (user) => {
+          this.setState({
+            user: {
+              ...this.state.user, 
+              ...user
+            }
+          })
+          
+          QRCode.toCanvas(
+            document.getElementById('canvas'),
+            `http://localhost:3000/users/${user.id}/${user.securityCode}`,
+            function (error) {}
+            )
+          // .then(url => this.setState({ 
+          //   user: {
+          //   ...this.state.user, 
+          //   urlBidi: url } }))
+        },
+      (error) => console.log(error)
       );
-      QRCode.toDataURL(`users/${this.state.user.id}/${this.state.user.securityCode}`)
-      .then(url => this.setState({ 
-        user: {
-        ...this.state.user, 
-        urlBidi: url } }))
-      .catch(err => console.error(err))
+      console.log(this.state.user)
+     
+      // .catch(err => console.error(err))
 
     
 
@@ -394,11 +407,11 @@ class Profile extends Component {
       <div className="box mx-auto">
         <div className="row">
           <div className="col-12">
-            <div> <i className="fa fa-sign-out btn-logout" onClick={this.handleLogout}></i></div>
-            <div><p><Link to={`users/${user.id}/${user.securityCode}`}>View yout Public Profile</Link></p> </div>
-            <div><p><Link to={user.urlBidi}>View yout Public Profile</Link></p> </div>
+            {/* <div> <i className="fa fa-sign-out btn-logout" onClick={this.handleLogout}></i></div> */}
+            {/* <div><p><Link to={`users/${user.id}/${user.securityCode}`}>View yout Public Profile</Link></p> </div> */}
+            {/* <div><a href={user.urlBidi}>View yout Public Profile</a> </div> */}
+            <canvas id="canvas"></canvas>
 
-            <div>{}</div>
           </div>
         </div>
         <div className="row">
