@@ -47,13 +47,13 @@ const validations = {
     }
     return message;
   },
-  avatarURL: (value) => {
-    let message;
-    if(!value) {
-      message = 'avatarURL is required';
-    }
-    return message;
-  },
+  // avatarURL: (value) => {
+  //   let message;
+  //   if(!value) {
+  //     message = 'avatarURL is required';
+  //   }
+  //   return message;
+  // },
   telephone: (value) => {
     let message;
     if(!value) {
@@ -146,12 +146,12 @@ export default class Register extends Component {
     aAContact: {
       relationship: '',
       contactname: '',
-      telephone: ['']
+      telephone: []
     },
     user: {
       email: '',
       password: '',
-      avatarURL: '',
+      // avatarURL: '',
       name: '',
       surName: '',
       aAContacts: [],
@@ -179,26 +179,17 @@ export default class Register extends Component {
 
 // FUNCTIONS FOR ANT DESIGN
 
- 
-
   handleChangeSelect = (value) => {
     this.setState({
       user: {
         ...this.state.user,
         blood: value
-        
-        // añadir aqui un condicional para que mande los datos dentro de un array en las opciones en las que ha de serlo 
-      },
-      
+        },
       errors: {
         ...this.state.errors,
         [blood]: validations[blood] && validations[blood](value)
       }
     })
-    console.log(`selected ${value}`);
-    console.log(`state ${this.state.user.blood}`);
-
-
   }
 
   handleChecked = (checked, item, property) => {
@@ -239,12 +230,11 @@ export default class Register extends Component {
     this.setState({
       user: {
         ...this.state.user,
-        othersAllergy: [...tags]
+        othersAllergy: [...tags, inputValue]
       },
       tags,
       inputVisible: false,
       inputValue: '',
-
     });
   };
 
@@ -257,11 +247,6 @@ export default class Register extends Component {
       .some(attr => this.state.errors[attr])
   }
   
-  // isArray = () => {
-  //   return Object.value(this.state.user)
-  //     .some(attr => this.state.user[attr])
-  // }
-
   handleSubmitAddAaContact =(e) => {
     e.preventDefault()
     if (this.isValidAaContacts()) {
@@ -437,11 +422,11 @@ export default class Register extends Component {
                     <input type="number" name="ssn" className={`form-control ${touch.ssn && errors.ssn ? 'is-invalid' : ''}`} onChange={this.handleChange} onBlur={this.handleBlur} value={user.ssn} />
                     <div className='invalid-feedback'>{ errors.ssn}</div>
                   </div>
-                  <div className="form-group p-4 col-12">
+                  {/* <div className="form-group p-4 col-12">
                     <label>Image Url</label>
-                    <input type="url" name="avatarURL" className={`form-control ${touch.avatarURL && errors.avatarURL ? 'is-invalid' : ''}`} onChange={this.handleChange} onBlur={this.handleBlur} value={user.avatarURL} />
+                    <input type="text" name="avatarURL" className={`form-control ${touch.avatarURL && errors.avatarURL ? 'is-invalid' : ''}`} onChange={this.handleChange} onBlur={this.handleBlur} value={user.avatarURL} />
                     <div className='invalid-feedback'>{ errors.avatarURL}</div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
               

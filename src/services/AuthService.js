@@ -11,11 +11,15 @@ const getProfile = (user) => http.get('/profile/:id')
 
 const updateProfile = (user) => {
   const data = new FormData();
+  console.log(JSON.stringify(user))
   Object.keys(user).forEach(prop => {
-    if (prop === 'password' && user.password === '') return;
-    data.append(prop, user[prop])
+    if (prop === 'password' && user.password === '') return
+    data.append(prop, user[prop]) 
+
   });
-  return http.put('/profile/:id', data)
+  console.log(`/profile/${user.id}`)
+  console.log(user)
+  return http.put(`/profile/${user.id}`, user)
     .then(res => Promise.resolve(res.data));
 }
 

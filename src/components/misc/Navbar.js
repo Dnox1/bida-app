@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 
 import { MDBNavbar, MDBNavbarBrand, NavbarNav, MDBNavItem, MDBNavLink, MDBNavbarToggler, MDBCollapse, MDBContainer }
 from 'mdbreact';
@@ -61,19 +61,20 @@ render() {
             <MDBCollapse id="navbarCollapse1" isOpen={this.state.collapseID} navbar>
               <NavbarNav left>
                 <MDBNavItem active>
-                  <MDBNavLink to="/">Home</MDBNavLink>
+                  <Link to="/">Home</Link>
                 </MDBNavItem>
                 <MDBNavItem>
-                  <MDBNavLink to="/register">Register</MDBNavLink>
+                  <Link to="/register">Register</Link>
                 </MDBNavItem>
                 <MDBNavItem>
-                  <MDBNavLink to="/login">Login</MDBNavLink>
+                  <Link to="/login">Login</Link>
                 </MDBNavItem>
-               
               </NavbarNav>
             </MDBCollapse>
           </MDBContainer>
         </MDBNavbar>
+        <hr/>
+
       </MDBContainer>
       )}
   else if (isAuthenticated()) {
@@ -88,28 +89,32 @@ render() {
             <MDBNavbarToggler onClick={this.toggleCollapse('navbarCollapse1')} />
             <MDBCollapse id="navbarCollapse1" isOpen={this.state.collapseID} navbar>
               <NavbarNav left>
-                 {name}
+              <MDBNavItem active>
+                  <p>   <img src={`{user.avatarURL}`} width="100px" alt="logo" /> {user.name} {user.avatarURL}</p>
+                </MDBNavItem>
+                
                 <MDBNavItem active>
-                  <MDBNavLink to="/">Home</MDBNavLink>
+                  <Link to="/">Home</Link>
                 </MDBNavItem>
                 <MDBNavItem active>
-                  <MDBNavLink to="/profile">Profile</MDBNavLink>
+                  <Link to="/profile">Profile</Link>
                 </MDBNavItem>               
                 <MDBNavItem>
-                  <MDBNavLink onClick={this.handleLogout}>Logout</MDBNavLink>
+                  <p onClick={this.handleLogout}>Logout</p>
                 </MDBNavItem>
                 <MDBNavItem>
-                <MDBNavLink to={urlBidi}>Download BIDI Code{name}</MDBNavLink>
+                <Link to={`/${urlBidi}`}>Download BIDI Code</Link>
                 </MDBNavItem>
                 <MDBNavItem>
-                <MDBNavLink to={`users/${this.state.user.id}/${this.state.user.securityCode}`}>Public profile</MDBNavLink>
+                <Link to={`/users/${user.id}/${user.securityCode}`}>Public profile</Link>
                 </MDBNavItem>
-
               </NavbarNav>
             </MDBCollapse>
           </MDBContainer>
         </MDBNavbar>
+        <hr/>
       </MDBContainer>
+      
       )}
   
   }

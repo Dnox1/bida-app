@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link, Redirect } from 'react-router-dom'
-import { Tag, Input, Tooltip, Icon, Select } from 'antd';
+import { Tag, Input, Tooltip, Icon, Select, TapBar } from 'antd';
 
 
 import { AuthContext } from '../../contexts/AuthStore';
@@ -50,13 +50,13 @@ const validations = {
     }
     return message;
   },
-  avatarURL: (value) => {
-    let message;
-    if(!value) {
-      message = 'avatarURL is required';
-    }
-    return message;
-  },
+  // avatarURL: (value) => {
+  //   let message;
+  //   if(!value) {
+  //     message = 'avatarURL is required';
+  //   }
+  //   return message;
+  // },
   telephone: (value) => {
     let message;
     if(!value) {
@@ -156,7 +156,7 @@ class Profile extends Component {
     user: {
       email: '',
       password: '',
-      avatarURL: '',
+      // avatarURL: '',
       name: '',
       surName: '',
       aAContacts: [],
@@ -180,6 +180,9 @@ class Profile extends Component {
     tags: [],
     inputVisible: false,
     inputValue: '',
+    selectedTab: 'redTab',
+    hidden: false,
+    fullScreen: false,
   }
 
   // FUNCTIONS FOR QR GENERATOR
@@ -415,6 +418,35 @@ class Profile extends Component {
   //   // getQr(`users/${this.state.user.id}/${this.state.user.securityCode}`)
   // }
 
+  renderContent(pageText) {
+    return (
+      <div style={{ backgroundColor: 'white', height: '100%', textAlign: 'center' }}>
+        <div style={{ paddingTop: 60 }}>Clicked “{pageText}” tab， show “{pageText}” information</div>
+        <a style={{ display: 'block', marginTop: 40, marginBottom: 20, color: '#108ee9' }}
+          onClick={(e) => {
+            e.preventDefault();
+            this.setState({
+              hidden: !this.state.hidden,
+            });
+          }}
+        >
+          Click to show/hide tab-bar
+        </a>
+        <a style={{ display: 'block', marginBottom: 600, color: '#108ee9' }}
+          onClick={(e) => {
+            e.preventDefault();
+            this.setState({
+              fullScreen: !this.state.fullScreen,
+            });
+          }}
+        >
+          Click to switch fullscreen
+        </a>
+      </div>
+    );
+  }
+
+
   render() {
     const { isRegistered, errors, user, touch, aAContact, tags, inputVisible, inputValue } = this.state;
     if (isRegistered) {
@@ -422,23 +454,18 @@ class Profile extends Component {
     }
 
     return (
+      
       <div className="box mx-auto">
         <div className="row">
           <div className="col-12">
-            {/* <div> <i className="fa fa-sign-out btn-logout" onClick={this.handleLogout}></i></div> */}
-            {/* <div><p><Link to={`users/${user.id}/${user.securityCode}`}>View yout Public Profile</Link></p> </div> */}
-            {/* <div><a href={user.urlBidi}>View yout Public Profile</a> </div> */}
+            <hr/>
             <canvas id="canvas"></canvas>
-
           </div>
         </div>
-        <div className="row">
-          
+        <div className="row">     
           <div className="col-12">
             <h1>Profile</h1>
-
-            <form id="register-form" className="mt-4" onSubmit={this.handleSubmit} >
-             
+            <form id="update-form" className="mt-4" onSubmit={this.handleSubmit} >
               <div className="shadow p-4 mb-5 bg-white rounded "><h3>Register Data</h3>
                 <div className="row">
                   <div className="form-group p-4 col-12">
@@ -455,7 +482,6 @@ class Profile extends Component {
                   </div>
                 </div>
               </div>
-
               <div className="shadow p-4 mb-5 bg-white rounded "><h3>Personal Data</h3>
                 <div className="row">
                   <div className="form-group p-4 col-12">
@@ -478,20 +504,16 @@ class Profile extends Component {
                     <input type="number" name="ssn" className={`form-control ${touch.ssn && errors.ssn ? 'is-invalid' : ''}`} onChange={this.handleChange} onBlur={this.handleBlur} value={user.ssn} />
                     <div className='invalid-feedback'>{ errors.ssn}</div>
                   </div>
-                  <div className="form-group p-4 col-12">
+                  {/* <div className="form-group p-4 col-12">
                     <label>Image Url</label>
                     <input type="url" name="avatarURL" className={`form-control ${touch.avatarURL && errors.avatarURL ? 'is-invalid' : ''}`} onChange={this.handleChange} onBlur={this.handleBlur} value={user.avatarURL} />
                     <div className='invalid-feedback'>{ errors.avatarURL}</div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
-              
-
-
               <div className="shadow p-4 mb-5 bg-white rounded "><h3>AA Contacts</h3>
                 <div id="AaContact-form" className="mt-4" >
                   <div className="row">
-
                     <div className="form-group p-2 col-6">
                       <label>relationship</label>
                       <input type="text" name="relationship" className={`form-control ${touch.relationship && errors.relationship ? 'is-invalid' : ''}`} onChange={this.handleChangeAddAaContact} onBlur={this.handleBlur} value={aAContact.relationship} />
@@ -513,43 +535,29 @@ class Profile extends Component {
                     </div>
                   </div>
                 </div>
-                {/* <div>{aAContact.relationship} {aAContact.contactname} {aAContact.telephone}</div>
-                <div>{ this.state.aAContact.relationship } { this.state.aAContact.contactname } { this.state.aAContact.telephone }</div> */}
-                <div> { user.aAContacts && user.aAContacts.map((contact, i) => ( <p key= {i} > {contact.relationship} {contact.contactname} {contact.telephone} </p> ))} 
+                  <div> { user.aAContacts && user.aAContacts.map((contact, i) => ( <p key= {i} > {contact.relationship} {contact.contactname} {contact.telephone} </p> ))} </div>
+                  <div className='invalid-feedback'>{ errors.aAContacts}</div>
                 </div>
-                <div className='invalid-feedback'>{ errors.aAContacts}</div>
-
-                
-              </div>
-
-
               <div className="shadow p-4 mb-5 bg-white rounded ">
-                <h3>Medical data</h3>
-                <p> </p>
-                <h4>General</h4>
+                  <h3>Medical data</h3>
+                  <h4>General</h4>
                 <div className="row">                                 
                   <div className="form-group p-2 col-12">
                     <label>blood</label>
-                    {/* <select className={`form-control ${touch.blood && errors.blood ? 'is-invalid' : ''}`} name="blood" onChange={this.handleChange} onBlur={this.handleBlur} value={user.blood}>
-                     {bloodOpts}
-                    </select> */}
-
-                      <div>
-                        <Select defaultValue={'Select your type of blood'} style={{ width: 240 }} onChange={this.handleChangeSelect}  name="blood" value={user.blood}>
-                          <Option value="A+">A+</Option>
-                          <Option value="A-">A-</Option>
-                          <Option value="B+">B+</Option>
-                          <Option value="B-">B-</Option>
-                          <Option value="AB+">AB+</Option>
-                          <Option value="AB-">AB-</Option>
-                          <Option value="0+">0+</Option>
-                          <Option value="0-">0-</Option>
-                        </Select>
-                        
-                      </div>
-
-                    <div className='invalid-feedback'>{ errors.blood }</div>
+                  <div>
+                    <Select defaultValue={'Select your type of blood'} style={{ width: 240 }} onChange={this.handleChangeSelect}  name="blood" value={user.blood}>
+                      <Option value="A+">A+</Option>
+                      <Option value="A-">A-</Option>
+                      <Option value="B+">B+</Option>
+                      <Option value="B-">B-</Option>
+                      <Option value="AB+">AB+</Option>
+                      <Option value="AB-">AB-</Option>
+                      <Option value="0+">0+</Option>
+                      <Option value="0-">0-</Option>
+                    </Select>
                   </div>
+                  <div className='invalid-feedback'>{ errors.blood }</div>
+                </div>
                   <div className="form-group p-2 col-12">
                     <label>medsINeed</label>
                     <input type="text" name="medsINeed" className={`form-control ${touch.medsINeed && errors.medsINeed ? 'is-invalid' : ''}`} onChange={this.handleChange} onBlur={this.handleBlur} value={user.medsINeed} />
@@ -561,7 +569,6 @@ class Profile extends Component {
                     <div className='invalid-feedback'>{ errors.diseases }</div>
                   </div>                
                 </div>
-
                 <h4>Allergies</h4>
                 <div className="row">
                   <div className="form-group p-2 col-12">
@@ -604,80 +611,55 @@ class Profile extends Component {
                       ))}
                     </div>
                   </div>
-                  
-                  {/* <div className="form-group p-2 col-6">
-                    <label>food</label>
-                    <input type="text" name="food" className={`form-control ${touch.food && errors.food ? 'is-invalid' : ''}`} onChange={this.handleChange} onBlur={this.handleBlur} value={user.food} />
-                    <div className='invalid-feedback'>{ errors.food}</div>
-                  </div>
-                  <div className="form-group p-2 col-6">
-                    <label>ambiental</label>
-                    <input type="text" name="ambiental" className={`form-control ${touch.ambiental && errors.ambiental ? 'is-invalid' : ''}`} onChange={this.handleChange} onBlur={this.handleBlur} value={user.ambiental} />
-                    <div className='invalid-feedback'>{ errors.ambiental}</div>
-                  </div>  
-                  <div className="form-group p-2 col-6">
-                    <label>animal</label>
-                    <input type="text" name="animal" className={`form-control ${touch.animal && errors.animal ? 'is-invalid' : ''}`} onChange={this.handleChange} onBlur={this.handleBlur} value={user.animal} />
-                    <div className='invalid-feedback'>{ errors.animal}</div>
-                  </div>   */}
                   <div className="form-group p-2 col-12">
                     <label>othersAllergy</label>
-                    <div>
-        {tags.map((tag, index) => {
-          const isLongTag = tag.length > 20;
-          const tagElem = (
-            <Tag key={tag} closable={index !== 0} onClose={() => this.handleClose(tag)}>
-              {isLongTag ? `${tag.slice(0, 20)}...` : tag}
-            </Tag>
-          );
-          return isLongTag ? (
-            <Tooltip title={tag} key={tag}>
-              {tagElem}
-            </Tooltip>
-          ) : (
-            tagElem
-          );
-        })}
-        {inputVisible && (
-          <Input
-            ref={this.saveInputRef}
-            type="text"
-            size="small"
-            style={{ width: 78 }}
-            value={inputValue}
-            onChange={this.handleInputChange}
-            onBlur={this.handleInputConfirm}
-            onPressEnter={this.handleInputConfirm}
-          />
-        )}
-        {!inputVisible && (
-          <Tag onClick={this.showInput} value={user.othersAllergy} name="othersAllergy" style={{ background: '#fff', borderStyle: 'dashed' }}>
-            <Icon type="plus" /> Add Allergy
-          </Tag>
-        )}
-      </div>
-                    {/* <input type="text" name="othersAllergy" className={`form-control ${touch.othersAllergy && errors.othersAllergy ? 'is-invalid' : ''}`} onChange={this.handleChange} onBlur={this.handleBlur} value={user.othersAllergy} /> */}
-                    <div className='invalid-feedback'>{ errors.othersAllergy}</div>
+                      <div>
+                        {tags.map((tag, index) => {
+                          const isLongTag = tag.length > 20;
+                          const tagElem = (
+                            <Tag key={tag} closable={index !== 0} onClose={() => this.handleClose(tag)}>
+                              {isLongTag ? `${tag.slice(0, 20)}...` : tag}
+                            </Tag>
+                          );
+                          return isLongTag ? (
+                            <Tooltip title={tag} key={tag}>
+                              {tagElem}
+                            </Tooltip>
+                          ) : (
+                            tagElem
+                          );
+                        })}
+                        {inputVisible && (
+                          <Input
+                            ref={this.saveInputRef}
+                            type="text"
+                            size="small"
+                            style={{ width: 78 }}
+                            value={inputValue}
+                            onChange={this.handleInputChange}
+                            onBlur={this.handleInputConfirm}
+                            onPressEnter={this.handleInputConfirm}
+                          />
+                        )}
+                        {!inputVisible && (
+                          <Tag onClick={this.showInput} value={user.othersAllergy} name="othersAllergy" style={{ background: '#fff', borderStyle: 'dashed' }}>
+                            <Icon type="plus" /> Add Allergy
+                          </Tag>
+                        )}
+                        </div>
+                      <div className='invalid-feedback'>{ errors.othersAllergy}</div>
                   </div>    
-
-
-                  
-
                 </div>
-
               </div>
               <div className="col-12 pt-4">
-            <h5>Hello!</h5>
-            <p className="mb-2"><small>If you signup, you agree with all our terms and conditions where we can do whatever we want with the data!</small></p>
-            <button className="btn btn-success" form="register-form" type="submit" disabled={!this.isValid()}> Create the Account</button>
-          </div>
+                <button className="btn btn-success" form="update-form" type="submit" disabled={!this.isValid()}>Update</button>
+              </div>
             </form>
-
           </div>
-
         </div>
       </div>
-    )
+      
+    );
   }
 }
 

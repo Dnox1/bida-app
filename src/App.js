@@ -15,6 +15,7 @@ import Demo from './components/misc/demo';
 import Navbar from './components/misc/Navbar';
 import UserProfile from './components/Users/UserProfile';
 import FooterPage from './components/misc/Footer';
+import  TabBar from './components/misc/TapBar';
 
 // import UserContext from './contexts/UserContext';
 
@@ -33,6 +34,8 @@ class App extends Component {
                 <Route exact path="/users/:id/:securityCode" component={UserProfile} />
                 <PrivateRoute exact path="/profile" component={Profile} />
                 <Route exact path="/demo" component={Demo} />
+                <Route exact path="/tapbar" component={TabBar} />
+                
                 {/* <Route exact path="/formPage" component={FormPage} /> */}
               </Switch>
             </div>
