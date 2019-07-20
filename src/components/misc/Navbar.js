@@ -41,14 +41,17 @@ componentDidMount() {
         }),
     (error) => console.log(error)
     );
-    console.log(this.state.user)
+  console.log(this.state.user)
 }
 
+// addtoMyContacts(e) {
+//   e.preventDefault();
+//   console.log(this.props.match.params.id)
+// }
 
 render() {
-  const { isRegistered, urlBidi,  name, avatarURL } = this.state;
   const {isAuthenticated, user}=this.props
-  console.log(user)
+  // console.log(user)
   if (!isAuthenticated()) {
     return (
       <MDBContainer>
@@ -101,17 +104,20 @@ render() {
                   <Link to="/">Home</Link>
                 </MDBNavItem>
                 <MDBNavItem active>
-                  <Link to="/profile">Profile</Link>
+                  <Link to="/profile">My Profile</Link>
                 </MDBNavItem>               
                 <MDBNavItem>
                   <p onClick={this.handleLogout}>Logout</p>
                 </MDBNavItem>
                 <MDBNavItem>
-                <Link to={`/${urlBidi}`}>Download BIDI Code</Link>
+                  <a href={`${user.urlBidi}`} download={`bida_${user.name}`}>Download QRCode</a>
                 </MDBNavItem>
                 <MDBNavItem>
-                <Link to={`/users/${user.id}/${user.securityCode}`}>Public profile</Link>
+                <Link to={`/users/${user.id}/${user.securityCode}`}>My Public profile</Link>
                 </MDBNavItem>
+                {/* <MDBNavItem>
+                <p onClick={(e) => this.addtoMyContacts(e)}>Add to my contacts</p>
+                </MDBNavItem> */}
               </NavbarNav>
             </MDBCollapse>
           </MDBContainer>

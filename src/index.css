@@ -9,7 +9,7 @@ body {
 
 @font-face {
   font-family: pixelFont;
-  src: url("/public/fonts/pixelFont.otf") format("opentype");
+  src: url("/fonts/pixelFont.otf") format("opentype");
 }
 
 code {

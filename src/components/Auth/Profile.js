@@ -3,7 +3,7 @@ import { Link, Redirect } from 'react-router-dom'
 import { Tag, Input, Tooltip, Icon, Select, TapBar } from 'antd';
 
 
-import { AuthContext } from '../../contexts/AuthStore';
+// import { AuthContext } from '../../contexts/AuthStore';
 import AuthService from '../../services/AuthService';
 import blood from '../../data/blood.json';
 import medical from '../../data/medical.json';
@@ -20,22 +20,14 @@ var canvas = document.getElementById('canvas')
 // eslint-disable-next-line
 const EMAIL_PATTERN = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 const PASSWORD_PATTERN = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/;
-// const PHONE_PATTERN = /^[679]{1}[0-9]{8}$/;
-// const NIF_NIE_PATTERN = /^[0-9XYZ]{1}[0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/i;
-// const SSNUMBER_PATTERN = /^[0-9]{12}$/;
+const PHONE_PATTERN = /^[679]{1}[0-9]{8}$/;
+const NIF_NIE_PATTERN = /^[0-9XYZ]{1}[0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/i;
+const SSNUMBER_PATTERN = /^[0-9]{12}$/;
 // eslint-disable-next-line
 // const BIDA_URL_PATTERN = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
 
 const { CheckableTag } = Tag;
 const { Option } = Select;
-
-var opts = {
-  errorCorrectionLevel: 'H',
-  type: 'image/jpeg',
-  rendererOpts: {
-    quality: 0.3
-  }
-}
 
 const validations = {
   email: (value)=> {
@@ -56,17 +48,13 @@ const validations = {
     }
     return message;
   },
-  // avatarURL: (value) => {
-  //   let message;
-  //   if(!value) {
-  //     message = 'avatarURL is required';
-  //   }
-  //   return message;
-  // },
+ 
   telephone: (value) => {
     let message;
     if(!value) {
       message = 'telephone is required';
+     }else if (!PHONE_PATTERN.test(value)) {
+      message = "telephonr must contain nine numbers, begining in 6, 7 or 9"
     }
     return message;
   },
@@ -74,13 +62,17 @@ const validations = {
     let message;
     if(!value) {
       message = 'name is required';
+    } else if (value.length <= 3 ) {
+      message = 'name must contain at least three caracters'
     }
     return message;
   },
-  NIF_NIE: (value) => {
+  personalIdNumber: (value) => {
     let message;
     if(!value) {
       message = 'URL is required';
+    } else if (!NIF_NIE_PATTERN.test(value)) {
+      message = 'Document Number Pattern is invalid'
     }
     return message;
   },
@@ -88,66 +80,45 @@ const validations = {
     let message;
     if(!value) {
       message = 'URL is required';
+    } else if (!SSNUMBER_PATTERN.test(value)) {
+      message = 'SSNumber is invalid'
     }
     return message;
   },
-  blood: (value) => {
-    let message;
-    if(!value) {
-      message = 'URL is required';
-    }
-    return message;
-  },
-  medical: (value) => {
-    let message;
-    if(!value) {
-      message = 'URL is required';
-    }
-    return message;
-  },
-  food: (value) => {
-    let message;
-    if(!value) {
-      message = 'URL is required';
-    }
-    return message;
-  },
-  ambiental: (value) => {
-    let message;
-    if(!value) {
-      message = 'URL is required';
-    }
-    return message;
-  },
-  animal: (value) => {
-    let message;
-    if(!value) {
-      message = 'URL is required';
-    }
-    return message;
-  },
-  othersAllergy:(value) => {
-    let message;
-    if(!value) {
-      message = 'URL is required';
-    }
-    return message;
-  },
-  // securityCode:(value) => {
-  //   let message;
-  //   if(!value) {
-  //     message = 'URL is required';
-  //   }
-  //   return message;
-  // },
-
   aAContacts:(value) => {
     let message;
     if(!value) {
       message = 'Add at least a Contact for advise';
     }
     return message;
-  }
+  },
+  relationship: (value) => {
+    let message;
+    if(!value) {
+      message = 'name is required';
+    } else if (value.length <= 3 ) {
+      message = 'name must contain at least three caracters'
+    }
+    return message;
+  },
+  contactname: (value) => {
+    let message;
+    if(!value) {
+      message = 'name is required';
+    } else if (value.length <= 3 ) {
+      message = 'name must contain at least three caracters'
+    }
+    return message;
+  },
+  contactTelephone: (value) => {
+    let message;
+    if(!value) {
+      message = 'telephone is required';
+     }else if (!PHONE_PATTERN.test(value)) {
+      message = "telephonr must contain nine numbers, begining in 6, 7 or 9"
+    }
+    return message;
+  },
 }
 
 
@@ -157,7 +128,7 @@ class Profile extends Component {
     aAContact: {
       relationship: '',
       contactname: '',
-      telephone: ['']
+      contactTelephone: ['']
     },
     user: {
       email: '',
@@ -299,6 +270,24 @@ class Profile extends Component {
       console.log(this.state.user)
     }
   }
+
+  handleSubmitRemoveAaContact =(e, i) => {
+    e.preventDefault()
+    const newContact = this.state.user.aAContacts.filter((c) => {
+      return c.contactTelephone !== i
+    })    
+    this.setState({
+      user: {
+        ...this.state.user,
+        aAContacts: newContact
+      }
+    })
+    console.log(i);
+  }
+
+  
+
+ 
 
   handleChangeAddAaContact = (e) => {
     const { name, value } = e.target;
@@ -460,8 +449,14 @@ class Profile extends Component {
           <div className="col-12">
             <hr/>
             <canvas id="canvas"></canvas>
-            <a href={`whatsapp://send?text=texto%20con%20URL`}></a> 
+          <div className="col-12">
+          <a href={`whatsapp://send?text=http://localhost:3000/users/${user.id}/${user.securityCode}`} data-action="share/whatsapp/share">Enviar por WhatsApp</a>
 
+            
+            <a href="whatsapp://send?text=texto">Compartir por whatsapp</a> 
+
+            <a href={`whatsapp://send?text=http://localhost:3000/users/${user.id}/${user.securityCode}`}>Compartir por whatsapp</a> 
+          </div>
             <a href={`${user.urlBidi}`} download={`bida_${user.name}`}>Download QRCode</a>
           </div>
         </div>
@@ -529,8 +524,8 @@ class Profile extends Component {
                     </div>
                     <div className="form-group p-2 col-6">
                       <label>Telephone</label>
-                      <input type="tel" name="telephone" className={`form-control ${touch.telephone && errors.telephone ? 'is-invalid' : ''}`} onChange={this.handleChangeAddAaContact} onBlur={this.handleBlur} value={aAContact.telephone} />
-                      <div className='invalid-feedback'>{ errors.telephone}</div>
+                      <input type="tel" name="contactTelephone" className={`form-control ${touch.contactTelephone && errors.contactTelephone ? 'is-invalid' : ''}`} onChange={this.handleChangeAddAaContact} onBlur={this.handleBlur} value={aAContact.contactTelephone} />
+                      <div className='invalid-feedback'>{ errors.contactTelephone}</div>
                     </div>
                     <div className="form-group p-2 col-3">
                       <label> + </label>
@@ -538,7 +533,11 @@ class Profile extends Component {
                     </div>
                   </div>
                 </div>
-                  <div> { user.aAContacts && user.aAContacts.map((contact, i) => ( <p key= {i} > {contact.relationship} {contact.contactname} {contact.telephone} </p> ))} </div>
+                  <div> { user.aAContacts && user.aAContacts.map((contact, i) => ( 
+                    <p key= {i} > {contact.relationship} {contact.contactname} {contact.contactTelephone} 
+                    <button className="btn btn-danger" onClick={(e) => this.handleSubmitRemoveAaContact(e, contact.contactTelephone)} > - </button> </p>
+                    ))} 
+                  </div>
                   <div className='invalid-feedback'>{ errors.aAContacts}</div>
                 </div>
               <div className="shadow p-4 mb-5 bg-white rounded ">
@@ -548,7 +547,7 @@ class Profile extends Component {
                   <div className="form-group p-2 col-12">
                     <label>blood</label>
                   <div>
-                    <Select defaultValue={'Select your type of blood'} style={{ width: 240 }} onChange={this.handleChangeSelect}  name="blood" value={user.blood}>
+                    <Select defaultValue={'Select your type of blood'}  onChange={this.handleChangeSelect}  name="blood" value={user.blood}>
                       <Option value="A+">A+</Option>
                       <Option value="A-">A-</Option>
                       <Option value="B+">B+</Option>

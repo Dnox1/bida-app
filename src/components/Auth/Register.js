@@ -84,62 +84,6 @@ const validations = {
     }
     return message;
   },
-  // blood: (value) => {
-  //   let message;
-  //   if(!value) {
-  //     message = 'Blood type is required';
-  //   }
-  //   return message;
-  // },
-  // medical: (value) => {
-  //   let message;
-  //   if(!value) {
-  //     message = 'URL is required';
-  //   }
-  //   return message;
-  // },
-  // food: (value) => {
-  //   let message;
-  //   if(!value) {
-  //     message = 'URL is required';
-  //   }
-  //   return message;
-  // },
-  // ambiental: (value) => {
-  //   let message;
-  //   if(!value) {
-  //     message = 'URL is required';
-  //   }
-  //   return message;
-  // },
-  // animal: (value) => {
-  //   let message;
-  //   if(!value) {
-  //     message = 'URL is required';
-  //   }
-  //   return message;
-  // },
-  // othersAllergy:(value) => {
-  //   let message;
-  //   if(!value) {
-  //     message = 'URL is required';
-  //   }
-  //   return message;
-  // },
-  // securityCode:(value) => {
-  //   let message;
-  //   if(!value) {
-  //     message = 'URL is required';
-  //   }
-  //   return message;
-  // },
- // avatarURL: (value) => {
-  //   let message;
-  //   if(!value) {
-  //     message = 'avatarURL is required';
-  //   }
-  //   return message;
-  // },
   aAContacts:(value) => {
     let message;
     if(!value) {
