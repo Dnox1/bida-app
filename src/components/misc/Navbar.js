@@ -89,8 +89,12 @@ render() {
             <MDBNavbarToggler onClick={this.toggleCollapse('navbarCollapse1')} />
             <MDBCollapse id="navbarCollapse1" isOpen={this.state.collapseID} navbar>
               <NavbarNav left>
-              <MDBNavItem active>
-                  <p>   <img src={`{user.avatarURL}`} width="100px" alt="logo" /> {user.name} {user.avatarURL}</p>
+                <MDBNavItem active>
+                  <p>   
+                    {/* <img src={`{user.avatarURL}`} width="100px" alt="logo" />  */}
+                    {user.name}
+                    {/* {user.avatarURL} */}
+                    </p>
                 </MDBNavItem>
                 
                 <MDBNavItem active>

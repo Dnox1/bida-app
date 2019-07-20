@@ -7,7 +7,17 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+@font-face {
+  font-family: pixelFont;
+  src: url("/public/fonts/pixelFont.otf") format("opentype");
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+h3 {
+  font-family: pixelFont, Helvetica, sans-serif;
+  color: #3bfe00;
 }

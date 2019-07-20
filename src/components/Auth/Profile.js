@@ -29,7 +29,13 @@ const PASSWORD_PATTERN = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/;
 const { CheckableTag } = Tag;
 const { Option } = Select;
 
-
+var opts = {
+  errorCorrectionLevel: 'H',
+  type: 'image/jpeg',
+  rendererOpts: {
+    quality: 0.3
+  }
+}
 
 const validations = {
   email: (value)=> {
@@ -381,42 +387,36 @@ class Profile extends Component {
           QRCode.toCanvas(
             document.getElementById('canvas'),
             `http://localhost:3000/users/${user.id}/${user.securityCode}`,
+            { 
+              errorCorrectionLevel: 'H',
+              color: {
+                dark: '#3bfe00',  // Blue dots
+                light: '#0000' // Transparent background
+              }
+            },
             function (error) {}
             )
-        },
-      (error) => console.log(error)
-      );
-      console.log(this.state.user)
+         
+
+          QRCode.toDataURL(
+            `http://localhost:3000/users/${user.id}/${user.securityCode}`,
+            { 
+              errorCorrectionLevel: 'H',
+              type: 'image/jpeg',
+              color: {
+                dark: '#3bfe00',  // Blue dots
+                light: '#0000' // Transparent background
+              }
+            })
+            .then(url => this.setState({ 
+              user: {
+              ...this.state.user, 
+              urlBidi: url } }))
+            .catch(err => console.error(err))
+
+ 
+    })
   }
-
-  // componentDidMount() {
-  //   AuthService.getProfile() //llamar solo si está autenticado
-  //     .then(
-  //       (user) => {
-  //         this.setState({
-  //           user: this.props.user
-  //         }, ()=>console.log(this.state.user))
-          
-  //         QRCode.toCanvas(
-  //           document.getElementById('canvas'),
-  //           `http://localhost:3000/users/${user.id}/${user.securityCode}`,
-  //           function (error) {}
-  //           )
-  //         // .then(url => this.setState({ 
-  //         //   user: {
-  //         //   ...this.state.user, 
-  //         //   urlBidi: url } }))
-  //       },
-  //     (error) => console.log(error)
-  //     );
-  //     console.log(this.state.user)
-     
-  //     // .catch(err => console.error(err))
-
-    
-
-  //   // getQr(`users/${this.state.user.id}/${this.state.user.securityCode}`)
-  // }
 
   renderContent(pageText) {
     return (
@@ -460,6 +460,9 @@ class Profile extends Component {
           <div className="col-12">
             <hr/>
             <canvas id="canvas"></canvas>
+            <a href={`whatsapp://send?text=texto%20con%20URL`}></a> 
+
+            <a href={`${user.urlBidi}`} download={`bida_${user.name}`}>Download QRCode</a>
           </div>
         </div>
         <div className="row">     

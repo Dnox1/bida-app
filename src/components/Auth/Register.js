@@ -18,9 +18,9 @@ import animal from '../../data/animal.json';
 // eslint-disable-next-line
 const EMAIL_PATTERN = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 const PASSWORD_PATTERN = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/;
-// const PHONE_PATTERN = /^[679]{1}[0-9]{8}$/;
-// const NIF_NIE_PATTERN = /^[0-9XYZ]{1}[0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/i;
-// const SSNUMBER_PATTERN = /^[0-9]{12}$/;
+const PHONE_PATTERN = /^[679]{1}[0-9]{8}$/;
+const NIF_NIE_PATTERN = /^[0-9XYZ]{1}[0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKET]{1}$/i;
+const SSNUMBER_PATTERN = /^[0-9]{12}$/;
 // eslint-disable-next-line
 // const BIDA_URL_PATTERN = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
 
@@ -47,17 +47,13 @@ const validations = {
     }
     return message;
   },
-  // avatarURL: (value) => {
-  //   let message;
-  //   if(!value) {
-  //     message = 'avatarURL is required';
-  //   }
-  //   return message;
-  // },
+ 
   telephone: (value) => {
     let message;
     if(!value) {
       message = 'telephone is required';
+     }else if (!PHONE_PATTERN.test(value)) {
+      message = "telephonr must contain nine numbers, begining in 6, 7 or 9"
     }
     return message;
   },
@@ -65,13 +61,17 @@ const validations = {
     let message;
     if(!value) {
       message = 'name is required';
+    } else if (value.length <= 3 ) {
+      message = 'name must contain at least three caracters'
     }
     return message;
   },
-  NIF_NIE: (value) => {
+  personalIdNumber: (value) => {
     let message;
     if(!value) {
       message = 'URL is required';
+    } else if (!NIF_NIE_PATTERN.test(value)) {
+      message = 'Document Number Pattern is invalid'
     }
     return message;
   },
@@ -79,51 +79,53 @@ const validations = {
     let message;
     if(!value) {
       message = 'URL is required';
+    } else if (!SSNUMBER_PATTERN.test(value)) {
+      message = 'SSNumber is invalid'
     }
     return message;
   },
-  blood: (value) => {
-    let message;
-    if(!value) {
-      message = 'URL is required';
-    }
-    return message;
-  },
-  medical: (value) => {
-    let message;
-    if(!value) {
-      message = 'URL is required';
-    }
-    return message;
-  },
-  food: (value) => {
-    let message;
-    if(!value) {
-      message = 'URL is required';
-    }
-    return message;
-  },
-  ambiental: (value) => {
-    let message;
-    if(!value) {
-      message = 'URL is required';
-    }
-    return message;
-  },
-  animal: (value) => {
-    let message;
-    if(!value) {
-      message = 'URL is required';
-    }
-    return message;
-  },
-  othersAllergy:(value) => {
-    let message;
-    if(!value) {
-      message = 'URL is required';
-    }
-    return message;
-  },
+  // blood: (value) => {
+  //   let message;
+  //   if(!value) {
+  //     message = 'Blood type is required';
+  //   }
+  //   return message;
+  // },
+  // medical: (value) => {
+  //   let message;
+  //   if(!value) {
+  //     message = 'URL is required';
+  //   }
+  //   return message;
+  // },
+  // food: (value) => {
+  //   let message;
+  //   if(!value) {
+  //     message = 'URL is required';
+  //   }
+  //   return message;
+  // },
+  // ambiental: (value) => {
+  //   let message;
+  //   if(!value) {
+  //     message = 'URL is required';
+  //   }
+  //   return message;
+  // },
+  // animal: (value) => {
+  //   let message;
+  //   if(!value) {
+  //     message = 'URL is required';
+  //   }
+  //   return message;
+  // },
+  // othersAllergy:(value) => {
+  //   let message;
+  //   if(!value) {
+  //     message = 'URL is required';
+  //   }
+  //   return message;
+  // },
   // securityCode:(value) => {
   //   let message;
   //   if(!value) {
@@ -131,14 +133,47 @@ const validations = {
   //   }
   //   return message;
   // },
-
+ // avatarURL: (value) => {
+  //   let message;
+  //   if(!value) {
+  //     message = 'avatarURL is required';
+  //   }
+  //   return message;
+  // },
   aAContacts:(value) => {
     let message;
     if(!value) {
       message = 'Add at least a Contact for advise';
     }
     return message;
-  }
+  },
+  relationship: (value) => {
+    let message;
+    if(!value) {
+      message = 'name is required';
+    } else if (value.length <= 3 ) {
+      message = 'name must contain at least three caracters'
+    }
+    return message;
+  },
+  contactname: (value) => {
+    let message;
+    if(!value) {
+      message = 'name is required';
+    } else if (value.length <= 3 ) {
+      message = 'name must contain at least three caracters'
+    }
+    return message;
+  },
+  contactTelephone: (value) => {
+    let message;
+    if(!value) {
+      message = 'telephone is required';
+     }else if (!PHONE_PATTERN.test(value)) {
+      message = "telephonr must contain nine numbers, begining in 6, 7 or 9"
+    }
+    return message;
+  },
 }
 
 export default class Register extends Component {
@@ -146,7 +181,7 @@ export default class Register extends Component {
     aAContact: {
       relationship: '',
       contactname: '',
-      telephone: []
+      contactTelephone: []
     },
     user: {
       email: '',
@@ -157,7 +192,7 @@ export default class Register extends Component {
       aAContacts: [],
       personalIdNumber: '',
       ssn: '',
-      blood: [],
+      blood: '',
       medical: [],
       food: [],
       ambiental: [],
@@ -315,34 +350,6 @@ export default class Register extends Component {
     })
   }
 
-  // formatUser = () => {
-  //   const {user, email, password, avatarURL, name, surName, aAContacts, personalIdNumber, ssn, blood, medical, food,  ambiental,
-  //     animal, othersAllergy, medsINeed, diseases, securityCode} = this.state;
-
-  //   return {...user, 
-  //     personalData: {
-  //       name,
-  //       surName,
-  //       aAContacts,
-  //       personalIdNumber,
-  //       ssn,
-  //     },
-  //     medicalData: {
-  //       blood,
-  //       allergies: {
-  //         medical,
-  //         food,
-  //         ambiental,
-  //         animal,
-  //         othersAllergy
-  //       },
-  //       medsINeed,
-  //       diseases
-  //     },
-  //     securityCode
-  //   }
-  // }
-
   handleSubmit = (event) => {
     event.preventDefault();
     if (this.isValid()) {
@@ -413,12 +420,12 @@ export default class Register extends Component {
                     <div className='invalid-feedback'>{ errors.surName}</div>
                   </div>
                   <div className="form-group p-4 col-12">
-                    <label>personalIdNumber</label>
+                    <label>NIF / NIE</label>
                     <input type="text" name="personalIdNumber" className={`form-control ${touch.personalIdNumber && errors.personalIdNumber ? 'is-invalid' : ''}`} onChange={this.handleChange} onBlur={this.handleBlur} value={user.personalIdNumber} />
                     <div className='invalid-feedback'>{ errors.personalIdNumber}</div>
                   </div>
                   <div className="form-group p-4 col-12">
-                    <label>ssn</label>
+                    <label>Social Security Number</label>
                     <input type="number" name="ssn" className={`form-control ${touch.ssn && errors.ssn ? 'is-invalid' : ''}`} onChange={this.handleChange} onBlur={this.handleBlur} value={user.ssn} />
                     <div className='invalid-feedback'>{ errors.ssn}</div>
                   </div>
@@ -437,27 +444,27 @@ export default class Register extends Component {
                   <div className="row">
 
                     <div className="form-group p-2 col-6">
-                      <label>relationship</label>
+                      <label>Relationship</label>
                       <input type="text" name="relationship" className={`form-control ${touch.relationship && errors.relationship ? 'is-invalid' : ''}`} onChange={this.handleChangeAddAaContact} onBlur={this.handleBlur} value={aAContact.relationship} />
                       <div className='invalid-feedback'>{ errors.relationship}</div>
                     </div>
                     <div className="form-group p-2 col-6">
-                      <label>contactname</label>
+                      <label>Contactname</label>
                       <input type="text" name="contactname" className={`form-control ${touch.contactname && errors.contactname ? 'is-invalid' : ''}`} onChange={this.handleChangeAddAaContact} onBlur={this.handleBlur} value={aAContact.contactname} />
                       <div className='invalid-feedback'>{ errors.contactname}</div>
                     </div>
                     <div className="form-group p-2 col-6">
                       <label>Telephone</label>
-                      <input type="tel" name="telephone" className={`form-control ${touch.telephone && errors.telephone ? 'is-invalid' : ''}`} onChange={this.handleChangeAddAaContact} onBlur={this.handleBlur} value={aAContact.telephone} />
-                      <div className='invalid-feedback'>{ errors.telephone}</div>
+                      <input type="tel" name="contactTelephone" className={`form-control ${touch.contactTelephone && errors.contactTelephone ? 'is-invalid' : ''}`} onChange={this.handleChangeAddAaContact} onBlur={this.handleBlur} value={aAContact.contactTelephone} />
+                      <div className='invalid-feedback'>{ errors.contactTelephone}</div>
                     </div>
                     <div className="form-group p-2 col-3">
-                      <label> + </label>
+                      <label>Add</label>
                       <button className="btn btn-success" form="AaContact-form"   onClick={(e) => this.handleSubmitAddAaContact(e)}> + </button>
                     </div>
                   </div>
                 </div>
-                <div> { user.aAContacts && user.aAContacts.map((contact, i) => ( <p key= {i} > {contact.relationship} {contact.contactname} {contact.telephone} </p> ))} </div>
+                <div> { user.aAContacts && user.aAContacts.map((contact, i) => ( <p key= {i} > {contact.relationship} {contact.contactname} {contact.contactTelephone} </p> ))} </div>
 
                 <div className='invalid-feedback'>{ errors.aAContacts}</div>
 
@@ -471,7 +478,7 @@ export default class Register extends Component {
                 <h4>General</h4>
                 <div className="row">                                 
                   <div className="form-group p-2 col-12">
-                    <label>blood</label>
+                    <label>Blood Type</label>
                     {/* <select className={`form-control ${touch.blood && errors.blood ? 'is-invalid' : ''}`} name="blood" onChange={this.handleChange} onBlur={this.handleBlur} value={user.blood}>
                      {bloodOpts}
                     </select> */}
@@ -493,12 +500,12 @@ export default class Register extends Component {
                     <div className='invalid-feedback'>{ errors.blood }</div>
                   </div>
                   <div className="form-group p-2 col-12">
-                    <label>medsINeed</label>
+                    <label>Meds I Need</label>
                     <input type="text" name="medsINeed" className={`form-control ${touch.medsINeed && errors.medsINeed ? 'is-invalid' : ''}`} onChange={this.handleChange} onBlur={this.handleBlur} value={user.medsINeed} />
                     <div className='invalid-feedback'>{ errors.medsINeed }</div>
                   </div>
                   <div className="form-group p-2 col-12">
-                    <label>diseases</label>
+                    <label>Diseases</label>
                     <input type="text" name="diseases" className={`form-control ${touch.diseases && errors.diseases ? 'is-invalid' : ''}`} onChange={this.handleChange} onBlur={this.handleBlur} value={user.diseases} />
                     <div className='invalid-feedback'>{ errors.diseases }</div>
                   </div>                
@@ -507,7 +514,7 @@ export default class Register extends Component {
                 <h4>Allergies</h4>
                 <div className="row">
                   <div className="form-group p-2 col-12">
-                    <label>medical</label>
+                    <label>Medical</label>
                     <div>
                       {medical.map((option, i) => (
                         <CheckableTag key={i} checked={user.medical.includes(option)} onChange={checked => { this.handleChecked(checked, option, 'medical') }}>
@@ -563,7 +570,7 @@ export default class Register extends Component {
                     <div className='invalid-feedback'>{ errors.animal}</div>
                   </div>   */}
                   <div className="form-group p-2 col-12">
-                    <label>othersAllergy</label>
+                    <label>Others allergies</label>
                     <div>
                       {tags.map((tag, index) => {
                         const isLongTag = tag.length > 20;
@@ -604,11 +611,9 @@ export default class Register extends Component {
                 </div>
               </div>
               <div className="col-12 pt-4">
-                <h5>Hello!</h5>
+                {/* <h5>Hello!</h5> */}
                 <p className="mb-2"><small>If you signup, you agree with all our terms and conditions where we can do whatever we want with the data!</small></p>
                 <button className="btn btn-success" form="register-form" type="submit" disabled={!this.isValid()}> Create the Account</button>
-                <p className="mb-2"><small>If you signup, you agree with all our terms and conditions where we can do whatever we want with the data!</small></p>
-
               </div>
             </form>
           </div>
